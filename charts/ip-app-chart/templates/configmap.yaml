@@ -1,0 +1,8 @@
+{{- if .Values.config }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "ip-app-chart.fullname" . }}
+data:
+{{ toYaml .Values.config | indent 2 }}
+{{- end }}
