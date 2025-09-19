@@ -107,6 +107,6 @@ tolerations: []
 affinity: {}
 
 config:
-  kaka: maika
+  PORT: 80
 
-secret: true
+secret: false
