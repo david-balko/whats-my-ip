@@ -61,10 +61,31 @@ jobs:
         run: |
           cd charts/ip-app-chart
           helm upgrade --set image.tag=${{ github.sha }} -n staging ip-app .
-  notify:
+  notify-failure:
     runs-on: ubuntu-latest
+    if: ${{ always() && (needs.build-and-scan.result == 'failure' || needs.build-and-scan.result == 'timed_out' || needs.deploy.result == 'failure' || needs.deploy.result == 'timed_out') }}
+    needs:
+      - build-and-scan
+      - deploy
     steps:
+    - uses: actions/checkout@v2
     - name: Slack Notification
       uses: rtCamp/action-slack-notify@v2
       env:
+        SLACK_TITLE: 'Workflow Failed'
+        SLACK_MESSAGE: 'Push ${{ github.sha }} failed build or deploy stages'
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+  notify-success:
+    runs-on: ubuntu-latest
+    if: ${{ always() && (needs.build-and-scan.result == 'success' || needs.deploy.result == 'success') }}
+    needs:
+      - build-and-scan
+      - deploy
+    steps:
+    - uses: actions/checkout@v2
+    - name: Slack Notification
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_TITLE: 'Workflow Succeded'
+        SLACK_MESSAGE: 'Push ${{ github.sha }} finished deployment succesfully'
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
