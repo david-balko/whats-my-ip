@@ -61,6 +61,12 @@ jobs:
         run: |
           cd charts/ip-app-chart
           helm upgrade --set image.tag=${{ github.sha }} -f ../../helm-values.yaml -n staging ip-app .
+      - name: Smoke test
+        run: |
+          export NODE_PORT=$(kubectl get --namespace staging -o jsonpath="{.spec.ports[0].nodePort}" services ip-app-ip-app-chart)
+          export NODE_IP=$(kubectl get nodes --namespace staging -o jsonpath="{.items[0].status.addresses[0].address}") 
+          echo 'Service local URL is: http://$NODE_IP:$NODE_PORT'
+          curl -i http://$NODE_IP:$NODE_PORT/
   notify-failure:
     runs-on: ubuntu-latest
     if: ${{ always() && (needs.build-and-scan.result == 'failure' || needs.build-and-scan.result == 'timed_out' || needs.deploy.result == 'failure' || needs.deploy.result == 'timed_out') }}
