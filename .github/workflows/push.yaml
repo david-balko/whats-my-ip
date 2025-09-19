@@ -57,12 +57,10 @@ jobs:
         run: |
           cd charts/ip-app-chart
           helm lint
-          echo ${{ vars.HELM_VALUES_FILE }} > chart-values.yaml
-          cat chart-values.yaml
-      # - name: Helm deploy
-      #   run: |
-      #     cd charts/ip-app-chart
-      #     helm upgrade --set image.tag=${{ github.sha }} -n staging ip-app .
+      - name: Helm deploy
+        run: |
+          cd charts/ip-app-chart
+          helm upgrade --set image.tag=${{ github.sha }} -n staging ip-app .
   notify-failure:
     runs-on: ubuntu-latest
     if: ${{ always() && (needs.build-and-scan.result == 'failure' || needs.build-and-scan.result == 'timed_out' || needs.deploy.result == 'failure' || needs.deploy.result == 'timed_out') }}
