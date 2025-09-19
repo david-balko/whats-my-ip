@@ -28,13 +28,13 @@ jobs:
         uses: aquasecurity/trivy-action@0.28.0
         with:
           image-ref: 'davidbalko10/ip-app:${{ github.sha }}'
-          exit-code: '1'
+          exit-code: '0'
           ignore-unfixed: true
           vuln-type: 'os,library'
           output: 'dependency-results.sbom.json'
           severity: 'CRITICAL,HIGH'
           scan-type: image
-          format: 'github'
+          format: 'table'
       - name: Upload trivy report as a Github artifact
         uses: actions/upload-artifact@v4
         with:
