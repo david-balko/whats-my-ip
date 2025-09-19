@@ -58,4 +58,6 @@ jobs:
           cd charts/ip-app-chart
           helm lint
       - name: Helm deploy
-        run: helm upgrade --set image.tag=${{ github.sha }} -n staging ip-app .
+        run: |
+          cd charts/ip-app-chart
+          helm upgrade --set image.tag=${{ github.sha }} -n staging ip-app .
