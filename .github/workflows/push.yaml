@@ -24,28 +24,30 @@ jobs:
           context: .
           push: true
           tags: davidbalko10/ip-app:${{ github.sha }}
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@0.28.0
+      - name: Generate Trivy Vulnerability Report
+        uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'davidbalko10/ip-app:${{ github.sha }}'
-          exit-code: '0'
-          ignore-unfixed: true
-          vuln-type: 'os,library'
-          output: 'dependency-results.sbom.json'
-          severity: 'CRITICAL,HIGH'
-          scan-type: image
-          format: 'table'
-      - name: Upload trivy report as a Github artifact
+          scan-type: "fs"
+          output: trivy-report.json
+          format: json
+          scan-ref: .
+          exit-code: 0
+
+      - name: Upload Vulnerability Scan Results
         uses: actions/upload-artifact@v4
         with:
-          name: trivy-sbom-report
-          path: '${{ github.workspace }}/dependency-results.sbom.json'
-          retention-days: 20 # 90 is the default
-      - name: Generate SBOM and submit results to Dependency Graph
-        uses: aquasecurity/trivy-action@0.28.0
+          name: trivy-report
+          path: trivy-report.json
+          retention-days: 30
+
+      - name: Fail build on High/Criticial Vulnerabilities
+        uses: aquasecurity/trivy-action@master
         with:
-          scan-type: 'fs'
-          format: 'github'
-          output: 'dependency-results.sbom.json'
-          scan-ref: '.'
-          github-pat: ${{ secrets.GITHUB_TOKEN }}
+          scan-type: "fs"
+          format: table
+          scan-ref: .
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: 1
+          # On a subsequent call to the action we know trivy is already installed so can skip this
+          skip-setup-trivy: true
