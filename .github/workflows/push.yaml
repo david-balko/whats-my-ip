@@ -41,7 +41,7 @@ jobs:
       - name: Fail build on High/Criticial Vulnerabilities
         uses: aquasecurity/trivy-action@0.28.0
         with:
-          image-ref: 'docker.io/my-organization/my-app:${{ github.sha }}'
+          image-ref: 'davidbalko10/ip-app:${{ github.sha }}'
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
