@@ -1,16 +1,12 @@
-node_modules
+# Readme
 *.md
-test.js
+
+# Tests and lint configuration
+server.test.js
+eslint.config.mjs
 
 # Node modules
 node_modules
-
-# Build output
-dist
-build
-
-# Logs
-*.log
 
 # Environment files
 .env
@@ -18,6 +14,12 @@ build
 # Git files
 .git
 .gitignore
+
+# Helm charts
+charts/*
+
+# Pipelines
+.github/*
 
 # Dockerfile and other Docker-related files
 Dockerfile*
