@@ -1,0 +1,26 @@
+replicaCount: 3
+service:
+  type: NodePort
+  port: 80
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+livenessProbe:
+  httpGet:
+    path: /health
+    port: http
+readinessProbe:
+  httpGet:
+    path: /ready
+    port: http
+
+config:
+  PORT: '80'
+
+secret: false
