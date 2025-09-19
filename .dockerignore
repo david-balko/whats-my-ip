@@ -24,3 +24,6 @@ charts/*
 # Dockerfile and other Docker-related files
 Dockerfile*
 .dockerignore
+
+# Helm custom values file
+helm-values.yaml
