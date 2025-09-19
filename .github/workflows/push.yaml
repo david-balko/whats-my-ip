@@ -51,5 +51,11 @@ jobs:
     runs-on: self-hosted
     needs: build-and-scan
     steps:
-      - name: Check kubernetes
-        run: kubectl get pods
+      - name: Checkout code
+        uses: actions/checkout@v5
+      - name: Helm lint
+        run: |
+          cd charts/ip-app-chart
+          helm lint
+      - name: Helm deploy
+        run: helm upgrade --set image.tag=${{ github.sha }} -n staging ip-app .
