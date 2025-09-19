@@ -47,3 +47,9 @@ jobs:
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
+  deploy:
+    runs-on: self-hosted
+    needs: build-and-scan
+    steps:
+      - name: Check kubernetes
+        run: kubectl get pods
